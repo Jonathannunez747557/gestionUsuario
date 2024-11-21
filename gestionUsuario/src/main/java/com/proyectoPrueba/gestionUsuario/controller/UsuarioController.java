@@ -32,9 +32,24 @@ public class UsuarioController {
 
     }
 
+    @GetMapping("/Usuarios-menor-que/{age}")
+    public ResponseEntity <List<Usuario>>finByAgeLessThan (@PathVariable int age){
+        List <Usuario> usuariosByAge = usuarioService.finbyEdadlessThan(age);
+        if (usuariosByAge.isEmpty()){
+           return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(usuariosByAge);
+    }
+
     @PostMapping
     public Usuario saveUsuario(@RequestBody Usuario usuario){
         return usuarioService.saveUsuario(usuario);
+    }
+
+
+    @PostMapping ("/cargar-multiples")
+    public List<Usuario> cargaMultiplesUsuaarios(@RequestBody List<Usuario> usuarios){
+        return usuarioService.cargarMultiplesUsuario(usuarios);
     }
     @PutMapping ("/{id}")
     public ResponseEntity<Usuario>updateUsuario(@PathVariable Long id , @RequestBody Usuario usuario ){
@@ -49,10 +64,18 @@ public class UsuarioController {
         }
     }
 
+
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Usuario>deleteUsuario(@PathVariable Long id){
         usuarioService.deleteUsuario(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/eliminar-todos")
+    public ResponseEntity<String>DeleteAllUsuarios (){
+        return ResponseEntity.ok(usuarioService.deleteAllUsuarios());
     }
 
 }
