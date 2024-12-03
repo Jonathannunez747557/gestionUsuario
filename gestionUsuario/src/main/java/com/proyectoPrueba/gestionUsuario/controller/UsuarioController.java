@@ -3,12 +3,10 @@ package com.proyectoPrueba.gestionUsuario.controller;
 import com.proyectoPrueba.gestionUsuario.entity.Usuario;
 import com.proyectoPrueba.gestionUsuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
  @RequestMapping("api/usuarios")
@@ -27,14 +25,14 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario>findUsuarioById(@PathVariable Long id){
-        Optional<Usuario> usuario = usuarioService.findUsuarioById(id);
-        return usuario.map(ResponseEntity::ok).orElseGet(( ) -> ResponseEntity.notFound().build());
+        Usuario usuario = usuarioService.findUsuarioById(id);
+        return ResponseEntity.ok(usuario);
 
     }
 
-    @GetMapping("/Usuarios-menor-que/{age}")
+    @GetMapping("/menor-que/{age}")
     public ResponseEntity <List<Usuario>>finByAgeLessThan (@PathVariable int age){
-        List <Usuario> usuariosByAge = usuarioService.finbyEdadlessThan(age);
+        List <Usuario> usuariosByAge = usuarioService.findByEdadlessThan(age);
         if (usuariosByAge.isEmpty()){
            return ResponseEntity.noContent().build();
         }
@@ -53,18 +51,10 @@ public class UsuarioController {
     }
     @PutMapping ("/{id}")
     public ResponseEntity<Usuario>updateUsuario(@PathVariable Long id , @RequestBody Usuario usuario ){
+        Usuario updateUsuario = usuarioService.updateUsuario(id, usuario);
+        return ResponseEntity.ok(updateUsuario);
 
-        Optional<Usuario> existingUsuario = usuarioService.findUsuarioById(id); //verifica si el usuario po ID existe antes de actualizarlo
-        if(existingUsuario.isPresent()){
-            usuario.setId(id);
-            Usuario updateUsuario = usuarioService.saveUsuario(usuario);
-            return ResponseEntity.ok(updateUsuario);//Restorna un 200 ok con el usuario actualizado
-        }else {
-            return ResponseEntity.notFound().build();//Retorna un estado 404 Not Found si el usuario no existe.
-        }
     }
-
-
 
 
     @DeleteMapping("/{id}")

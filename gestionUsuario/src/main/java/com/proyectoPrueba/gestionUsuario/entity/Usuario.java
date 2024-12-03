@@ -1,7 +1,6 @@
 package com.proyectoPrueba.gestionUsuario.entity;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table (name ="Usuarios")
 public class Usuario {
@@ -10,6 +9,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+
     private String name;
     @Column
     private String email;
